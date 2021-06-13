@@ -1,5 +1,6 @@
 FROM php:7.3-apache-buster
 
+ENV NEXTCLOUD_VERSION "v20.0.10"
 ENV PHP_MEMORY_LIMIT 512M
 ENV PHP_UPLOAD_LIMIT 512M
 ENV ADMIN_USER admin
@@ -27,7 +28,6 @@ RUN set -ex; \
         libzip-dev \
         libwebp-dev \
         libgmp-dev \
-        wget \
         gettext \
     ; \
     \
@@ -54,11 +54,6 @@ RUN set -ex; \
     ; \
     rm -r /tmp/pear; \
     \
-# Install PHPUnit and translationtool
-    wget -O /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar && \
-    chmod +x /usr/local/bin/phpunit; \
-    wget -O /usr/local/bin/translationtool https://github.com/nextcloud/docker-ci/raw/master/translations/translationtool/translationtool.phar && \
-    chmod +x /usr/local/bin/translationtool; \
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     apt-mark auto '.*' > /dev/null; \
     apt-mark manual $savedAptMark; \
@@ -71,6 +66,12 @@ RUN set -ex; \
         | xargs -rt apt-mark manual; \
     \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    apt-get install -y wget git rsync; \
+# Install PHPUnit and translationtool
+    wget -O /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.phar && \
+    chmod +x /usr/local/bin/phpunit; \
+    wget -O /usr/local/bin/translationtool https://github.com/nextcloud/docker-ci/raw/master/translations/translationtool/translationtool.phar && \
+    chmod +x /usr/local/bin/translationtool; \
     rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
@@ -120,4 +121,9 @@ RUN chmod +x /setup.sh
 
 ADD dummy.tar.gz /dummy-data
 
-CMD ["/setup.sh"]
+RUN git clone https://github.com/nextcloud/server.git --branch=$NEXTCLOUD_VERSION --depth=1 . && \
+    git submodule update --init;
+
+ENTRYPOINT ["/setup.sh"]
+
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

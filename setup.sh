@@ -15,4 +15,4 @@ fi
 
 /var/www/html/occ app:enable customproperties
 
-/usr/sbin/apache2ctl -D FOREGROUND
+exec "$@"
