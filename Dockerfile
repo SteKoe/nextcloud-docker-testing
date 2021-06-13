@@ -55,7 +55,7 @@ RUN set -ex; \
     rm -r /tmp/pear; \
     \
 # Install PHPUnit and translationtool
-    wget -O /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.phar && \
+    wget -O /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar && \
     chmod +x /usr/local/bin/phpunit; \
     wget -O /usr/local/bin/translationtool https://github.com/nextcloud/docker-ci/raw/master/translations/translationtool/translationtool.phar && \
     chmod +x /usr/local/bin/translationtool; \
