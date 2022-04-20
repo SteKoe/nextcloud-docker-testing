@@ -126,4 +126,5 @@ RUN git clone https://github.com/nextcloud/server.git --branch=$NEXTCLOUD_VERSIO
 
 ENTRYPOINT ["/setup.sh"]
 
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+COPY cmd.sh /cmd.sh
+CMD ["/cmd.sh"]
