@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+chown -R www-data:www-data .
+chmod -R 770 data/
+
 if /var/www/html/occ status | grep "installed: false"; then
   rm -rf /var/www/html/data
 
@@ -12,9 +15,6 @@ if /var/www/html/occ status | grep "installed: false"; then
   mv /dummy-data/* /var/www/html/data/$ADMIN_USER/files
   /var/www/html/occ files:scan $ADMIN_USER
 fi
-
-chown -R www-data:www-data .
-chmod -R 770 data/
 
 /var/www/html/occ app:enable customproperties
 
