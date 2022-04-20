@@ -127,4 +127,5 @@ RUN git clone https://github.com/nextcloud/server.git --branch=$NEXTCLOUD_VERSIO
 ENTRYPOINT ["/setup.sh"]
 
 COPY cmd.sh /cmd.sh
+RUN chmod +x /cmd.sh
 CMD ["/cmd.sh"]
