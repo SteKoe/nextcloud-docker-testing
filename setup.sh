@@ -13,6 +13,9 @@ if /var/www/html/occ status | grep "installed: false"; then
   /var/www/html/occ files:scan $ADMIN_USER
 fi
 
+chown -R www-data:www-data .
+chmod -R 770 data/
+
 /var/www/html/occ app:enable customproperties
 
 exec "$@"
