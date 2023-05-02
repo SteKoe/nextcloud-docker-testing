@@ -6,14 +6,15 @@ if /var/www/html/occ status | grep "installed: false"; then
 
   /var/www/html/occ maintenance:install \
     --database sqlite \
-    --admin-user $ADMIN_USER \
-    --admin-pass $ADMIN_PASS
+    --admin-user admin \
+    --admin-pass admin
 
-  mv /dummy-data/* /var/www/html/data/$ADMIN_USER/files
+  cp -r /dummy-data/* /var/www/html/data/admin/files
+  /var/www/html/occ files:scan admin
 
-  /var/www/html/occ files:scan $ADMIN_USER
 fi
 
 /var/www/html/occ app:enable customproperties
 
+echo "$@"
 exec "$@"
